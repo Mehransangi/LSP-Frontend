@@ -14,7 +14,7 @@ const Rights = () => {
                           
                             <section>
                                 <div className="flex justify-center mb-4">
-                                    <img src="/public/happykid.jpg" alt="Happy child in wheelchair" className="rounded-xl w-fit object-cover"/>
+                                    <img src="/public/happykid.jpg" alt="png1" className="rounded-xl w-fit object-cover"/>
                                 </div>
                                 <h2 className="text-2xl font-semibold mb-3">Understanding Disability Rights in Pakistan</h2>
                                 <p className='text-gray-600'>
