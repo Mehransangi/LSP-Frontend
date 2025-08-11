@@ -3,7 +3,7 @@ import { Link, NavLink, useNavigate } from 'react-router'
 import { useAuth } from '../../context/auth'
 import toast from 'react-hot-toast'
 import { FaBars, FaUser } from "react-icons/fa6"
-import { FaTimes, FaUserMd } from 'react-icons/fa'
+import { FaTimes } from 'react-icons/fa'
 
 const Header = () => {
   const [auth, setAuth] = useAuth();
