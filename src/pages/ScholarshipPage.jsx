@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import Layout from '../components/layout/Layout'
 import axios from 'axios'
-import { FaAngleLeft, FaAngleRight, FaArrowRightLong, FaBookmark, FaRegBookmark } from 'react-icons/fa6'
+import { FaAngleLeft, FaAngleRight, FaArrowRightLong, FaBookmark, FaRegBookmark, FaSpinner } from 'react-icons/fa6'
 import toast from 'react-hot-toast'
 import { Checkbox } from 'antd'
 import { useNavigate } from 'react-router'
@@ -24,8 +24,11 @@ const ScholarshipPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
   const isBookmarked = scholarshipBM.some(item => item._id === scholarship._id);
+  const [loading, setLoading] = useState(false);
+
   //Get all scholarships
   const getScholarships = async () => {
+    setLoading(true);
     try {
       const params = new URLSearchParams();
       if (checkedCategories.length) params.append('categories', checkedCategories.join(','));
@@ -44,6 +47,8 @@ const ScholarshipPage = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -213,85 +218,85 @@ const ScholarshipPage = () => {
             </aside>
             {/* Main content area */}
             <div className="w-full md:w-3/4  p-4 sm:p-6 rounded-2xl bg-white">
+              {loading ? <FaSpinner className="animate-spin" /> :
+                scholarship.length > 0 ? (scholarship.map((scholarship) => (
+                  <div key={scholarship._id} className="md:mx-12 bg-[#bdd1ff40] p-2 flex flex-col rounded-lg h-fit mb-6">
+                    <div className="bg-white flex flex-col m-2 p-3 rounded-lg h-full ">
+                      <div className="flex justify-between m-2">
+                        <h1 className='font-bold text-lg'>{scholarship.title}</h1>
 
-              {scholarship.length > 0 ? (scholarship.map((scholarship) => (
-                <div key={scholarship._id} className="md:mx-12 bg-[#bdd1ff40] p-2 flex flex-col rounded-lg h-fit mb-6">
-                  <div className="bg-white flex flex-col m-2 p-3 rounded-lg h-full ">
-                    <div className="flex justify-between m-2">
-                      <h1 className='font-bold text-lg'>{scholarship.title}</h1>
+                        <div className="bg-white">
+                          <button
+                            onClick={() => {
+                              setScholarshipBM(prev => {
+                                const alreadyExists = prev.some(item => item._id === scholarship._id);
+                                let updated;
 
-                      <div className="bg-white">
-                        <button
-                          onClick={() => {
-                            setScholarshipBM(prev => {
-                              const alreadyExists = prev.some(item => item._id === scholarship._id);
-                              let updated;
+                                if (alreadyExists) {
+                                  updated = prev.filter(item => item._id !== scholarship._id);
+                                  toast.success("Item removed from bookmarks");
+                                } else {
+                                  updated = [...prev, scholarship];
+                                  toast.success("Item added to bookmarks");
+                                }
 
-                              if (alreadyExists) {
-                                updated = prev.filter(item => item._id !== scholarship._id);
-                                toast.success("Item removed from bookmarks");
-                              } else {
-                                updated = [...prev, scholarship];
-                                toast.success("Item added to bookmarks");
-                              }
+                                localStorage.setItem("ScholarshipBM", JSON.stringify(updated));
+                                return updated;
+                              });
+                            }}
+                          >
+                            {scholarshipBM.some(item => item._id === scholarship._id) ? (
+                              <FaBookmark fill="#155efc" size={24} />
+                            ) : (
+                              <FaRegBookmark fill="#155efc" size={24} />
+                            )}
+                          </button>
 
-                              localStorage.setItem("ScholarshipBM", JSON.stringify(updated));
-                              return updated;
-                            });
-                          }}
-                        >
-                          {scholarshipBM.some(item => item._id === scholarship._id) ? (
-                            <FaBookmark fill="#155efc" size={24} />
-                          ) : (
-                            <FaRegBookmark fill="#155efc" size={24} />
-                          )}
-                        </button>
+                        </div>
 
                       </div>
-
-                    </div>
-                    <div className="m-2 font-light text-sm">
-                      {scholarship?.descriptionHTML?.replace(/<[^>]+>/g, '').length > 298
-                        ? scholarship?.descriptionHTML?.replace(/<[^>]+>/g, '').slice(0, 298) + '...'
-                        : scholarship?.descriptionHTML?.replace(/<[^>]+>/g, '')}
-                    </div>
-                    <div className="m-2 flex flex-col">
-                      <div className='flex'>
-                        <p className="text-gray-600 text-sm flex items-center mr-2">Location:</p>
-                        <p className="font-bold text-sm text-[#155efc]">{scholarship?.location?.name}</p>
+                      <div className="m-2 font-light text-sm">
+                        {scholarship?.descriptionHTML?.replace(/<[^>]+>/g, '').length > 298
+                          ? scholarship?.descriptionHTML?.replace(/<[^>]+>/g, '').slice(0, 298) + '...'
+                          : scholarship?.descriptionHTML?.replace(/<[^>]+>/g, '')}
                       </div>
-                      <div className="flex">
-                        <p className="text-gray-600 text-sm flex items-center  mr-2">University: </p>
-                        <p className="font-bold text-sm text-[#155efc]">{scholarship?.universityName?.name}</p>
-                      </div>
-                      <div className="flex">
-                        <p className="text-gray-600 text-sm flex items-center  mr-2">Program: </p>
-                        <p className="font-bold text-sm text-[#155efc]">{scholarship?.programLevel?.map((level, index) => (
-                          <span key={level._id}>
-                            {level.name}
-                            {index < scholarship.programLevel.length - 1 && ", "}
-                          </span>
-                        ))}</p>
-                      </div>
-                      <div className="flex">
-                        <p className="text-gray-600 text-sm flex items-center  mr-2">Category: </p>
-                        <p className="font-bold text-sm text-[#155efc]">{scholarship?.category?.name}</p>
-                      </div>
-                      <div className="flex">
-                        <p className="text-gray-600 text-sm flex items-center  mr-2">Deadline: </p>
-                        <p className="font-bold text-sm truncate text-[#B90000]">{scholarship?.applicationDeadline}</p>
-                      </div>
-                      <div className="flex justify-end">
-                        <button onClick={() => navigate(`/scholarship/${scholarship.slug}`)} className='text-white bg-[#155efc] hover:bg-blue-800 focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto py-4 px-6 m-1 h-fit text-center flex items-center justify-center gap-3'>Read More  <FaArrowRightLong size={20} /></button>
+                      <div className="m-2 flex flex-col">
+                        <div className='flex'>
+                          <p className="text-gray-600 text-sm flex items-center mr-2">Location:</p>
+                          <p className="font-bold text-sm text-[#155efc]">{scholarship?.location?.name}</p>
+                        </div>
+                        <div className="flex">
+                          <p className="text-gray-600 text-sm flex items-center  mr-2">University: </p>
+                          <p className="font-bold text-sm text-[#155efc]">{scholarship?.universityName?.name}</p>
+                        </div>
+                        <div className="flex">
+                          <p className="text-gray-600 text-sm flex items-center  mr-2">Program: </p>
+                          <p className="font-bold text-sm text-[#155efc]">{scholarship?.programLevel?.map((level, index) => (
+                            <span key={level._id}>
+                              {level.name}
+                              {index < scholarship.programLevel.length - 1 && ", "}
+                            </span>
+                          ))}</p>
+                        </div>
+                        <div className="flex">
+                          <p className="text-gray-600 text-sm flex items-center  mr-2">Category: </p>
+                          <p className="font-bold text-sm text-[#155efc]">{scholarship?.category?.name}</p>
+                        </div>
+                        <div className="flex">
+                          <p className="text-gray-600 text-sm flex items-center  mr-2">Deadline: </p>
+                          <p className="font-bold text-sm truncate text-[#B90000]">{scholarship?.applicationDeadline}</p>
+                        </div>
+                        <div className="flex justify-end">
+                          <button onClick={() => navigate(`/scholarship/${scholarship.slug}`)} className='text-white bg-[#155efc] hover:bg-blue-800 focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto py-4 px-6 m-1 h-fit text-center flex items-center justify-center gap-3'>Read More  <FaArrowRightLong size={20} /></button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))) : (
-                <div className="flex items-center justify-center w-full">
-                  <p className="text-gray-500 uppercase">No scholarships found.</p>
-                </div>
-              )}
+                ))) : (
+                  <div className="flex items-center justify-center w-full">
+                    <p className="text-gray-500 uppercase">No scholarships found.</p>
+                  </div>
+                )}
               <div className="flex justify-center items-center gap-4 mt-6">
                 <button
                   onClick={() => setPage(prev => Math.max(prev - 1, 1))}

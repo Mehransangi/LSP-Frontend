@@ -13,9 +13,6 @@ const Rights = () => {
                         <div className="w-full md:w-3/4  p-4 sm:p-6 rounded-2xl bg-white">
                           
                             <section>
-                                <div className="flex justify-center mb-4">
-                                    <img src="/public/happykid.jpg" alt="png1" className="rounded-xl w-fit object-cover"/>
-                                </div>
                                 <h2 className="text-2xl font-semibold mb-3">Understanding Disability Rights in Pakistan</h2>
                                 <p className='text-gray-600'>
                                     In any society, the protection and empowerment of marginalized communities is a true measure of justice, equity, and inclusion. In Pakistan, people with disabilities—often referred to as "persons with special needs"—represent a significant portion of the population. Whether due to birth conditions, disease, accidents, or conflict-related injuries, these individuals face unique challenges in areas such as education, employment, healthcare, and social participation. The <strong >Constitution of Pakistan</strong>, along with several national laws and international agreements, recognizes the importance of safeguarding the rights of disabled citizens.
