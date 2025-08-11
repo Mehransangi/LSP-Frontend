@@ -100,7 +100,7 @@ const HomePage = () => {
         {/* Scholarships */}
         <div className="bg-white w-full rounded-2xl flex flex-col p-4 overflow-auto">
           {loadingScholarships ? (
-            <FaSpinner className="animate-spin" />
+            <div className="flex justify-center"><FaSpinner className="animate-spin" /></div>
           ) : scholarships.length > 0 ? (
             scholarships.map((scholarship) => (
               <div key={scholarship._id} className="bg-[#bdd1ff40] p-5 flex flex-col rounded-lg mb-6 md:mx-40">
@@ -190,7 +190,7 @@ const HomePage = () => {
           </button>
         </div>
         <div className='bg-white p-6 rounded-2xl'>
-          {loadingUniTags ? (<FaSpinner className="animate-spin" />) :
+          {loadingUniTags ? (<div className="flex justify-center"><FaSpinner className="animate-spin" /></div>) :
             universityNameTags?.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {universityNameTags.map(tag => (

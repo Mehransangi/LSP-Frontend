@@ -45,7 +45,7 @@ const UniversityNameTag = () => {
               <h3 className="text-xl font-semibold m-4 uppercase">For Normal Students</h3>
               {universityNameTags?.filter(tag => tag.forDisabled === false).length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {loading ? <FaSpinner className="animate-spin" /> :
+                  {loading ? <div className="flex justify-center"><FaSpinner className="animate-spin" /></div> :
                     universityNameTags
                       .filter(tag => tag.forDisabled === false)
                       .map(tag => (
@@ -69,7 +69,7 @@ const UniversityNameTag = () => {
 
             <div>
               <h3 className="text-xl font-semibold m-4 uppercase">For Disabled Students</h3>
-              {loading ? <FaSpinner className="animate-spin" /> :
+              {loading ? <div className="flex justify-center"><FaSpinner className="animate-spin" /></div> :
                 universityNameTags?.filter(tag => tag.forDisabled === true).length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {universityNameTags
