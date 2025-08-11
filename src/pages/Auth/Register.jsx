@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Layout from '../../components/layout/layout'
+import Layout from '../../components/layout/Layout'
 import { Link, useNavigate } from 'react-router'
 import toast from 'react-hot-toast'
 import axios from 'axios'
