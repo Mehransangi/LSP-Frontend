@@ -218,7 +218,7 @@ const ScholarshipPage = () => {
             </aside>
             {/* Main content area */}
             <div className="w-full md:w-3/4  p-4 sm:p-6 rounded-2xl bg-white">
-              {loading ? <div className="flex justify-center"><FaSpinner className="animate-spin" /></div> :
+              {loading ? <div className="flex justify-center m-2"><FaSpinner className="animate-spin" /></div> :
                 scholarship.length > 0 ? (scholarship.map((scholarship) => (
                   <div key={scholarship._id} className="md:mx-12 bg-[#bdd1ff40] p-2 flex flex-col rounded-lg h-fit mb-6">
                     <div className="bg-white flex flex-col m-2 p-3 rounded-lg h-full ">

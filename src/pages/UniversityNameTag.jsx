@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Layout from '../components/layout/Layout'
 import toast from 'react-hot-toast'
 import axios from 'axios'
+import { FaSpinner } from 'react-icons/fa6'
 
 
 const UniversityNameTag = () => {
@@ -45,7 +46,7 @@ const UniversityNameTag = () => {
               <h3 className="text-xl font-semibold m-4 uppercase">For Normal Students</h3>
               {universityNameTags?.filter(tag => tag.forDisabled === false).length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {loading ? <div className="flex justify-center"><FaSpinner className="animate-spin" /></div> :
+                  {loading ? <div className="flex justify-center m-2"><FaSpinner className="animate-spin" /></div> :
                     universityNameTags
                       .filter(tag => tag.forDisabled === false)
                       .map(tag => (
@@ -69,7 +70,7 @@ const UniversityNameTag = () => {
 
             <div>
               <h3 className="text-xl font-semibold m-4 uppercase">For Disabled Students</h3>
-              {loading ? <div className="flex justify-center"><FaSpinner className="animate-spin" /></div> :
+              {loading ? <div className="flex justify-center m-2"><FaSpinner className="animate-spin" /></div> :
                 universityNameTags?.filter(tag => tag.forDisabled === true).length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {universityNameTags
