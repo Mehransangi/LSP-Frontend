@@ -44,10 +44,10 @@ const UniversityNameTag = () => {
             {/* UniversityTags */}
             <div>
               <h3 className="text-xl font-semibold m-4 uppercase">For Normal Students</h3>
-              {universityNameTags?.filter(tag => tag.forDisabled === false).length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {loading ? <div className="flex justify-center m-2"><FaSpinner className="animate-spin" /></div> :
-                    universityNameTags
+              {loading ? <div className="flex justify-center m-2"><FaSpinner className="animate-spin" /></div> :
+                universityNameTags?.filter(tag => tag.forDisabled === false).length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {universityNameTags
                       .filter(tag => tag.forDisabled === false)
                       .map(tag => (
                         <a
@@ -62,10 +62,10 @@ const UniversityNameTag = () => {
                           </div>
                         </a>
                       ))}
-                </div>
-              ) : (
-                <div className="text-center text-gray-500 ">No University NameTags found</div>
-              )}
+                  </div>
+                ) : (
+                  <div className="text-center text-gray-500 ">No University NameTags found</div>
+                )}
             </div>
 
             <div>
