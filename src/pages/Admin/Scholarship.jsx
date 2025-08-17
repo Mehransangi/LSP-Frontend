@@ -11,8 +11,10 @@ const Scholarship = () => {
     const [scholarships, setScholarships] = useState([]);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [loading, setLoading] = useState(false)
 
     const getScholarships = async () => {
+        setLoading(true);
         try {
             const params = new URLSearchParams()
             params.append('page', page);
@@ -26,6 +28,8 @@ const Scholarship = () => {
         } catch (error) {
             console.error("Error fetching scholarships:", error);
             toast.error("Failed to fetch scholarships.");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -48,7 +52,7 @@ const Scholarship = () => {
                         <h1 className="text-center font-bold text-xl sm:text-2xl mb-4">SCHOLARSHIPS</h1>
 
                         <div className="bg-white w-full rounded-2xl flex flex-col p-4 overflow-auto">
-                            {scholarships.length > 0 ? (
+                            { loading ? <div className="flex justify-center m-2"><FaSpinner className="animate-spin" /></div> : scholarships.length > 0 ? (
                                 scholarships.map((scholarship) => (
                                     <Link
                                         to={`/dashboard/admin/scholarship/${scholarship.slug}`}
