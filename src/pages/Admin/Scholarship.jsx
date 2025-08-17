@@ -3,7 +3,7 @@ import Layout from '../../components/layout/Layout'
 import AdminMenu from '../../components/layout/AdminMenu'
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { FaAngleLeft, FaAngleRight, FaArrowRightLong, FaRegBookmark } from 'react-icons/fa6';
+import { FaAngleLeft, FaAngleRight, FaArrowRightLong, FaRegBookmark, FaSpinner } from 'react-icons/fa6';
 import { Link } from 'react-router';
 
 
