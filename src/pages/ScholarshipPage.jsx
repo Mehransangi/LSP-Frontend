@@ -1,46 +1,74 @@
-import { useEffect, useState } from 'react'
-import Layout from '../components/layout/Layout'
-import axios from 'axios'
-import { FaAngleLeft, FaAngleRight, FaArrowRightLong, FaBookmark, FaRegBookmark, FaSpinner } from 'react-icons/fa6'
-import toast from 'react-hot-toast'
-import { Checkbox } from 'antd'
-import { useNavigate } from 'react-router'
-
+import { useEffect, useRef, useState } from "react";
+import Layout from "../components/layout/Layout";
+import axios from "axios";
+import {
+  FaAngleDown,
+  FaAngleLeft,
+  FaAngleRight,
+  FaAngleUp,
+  FaArrowRightLong,
+  FaBookmark,
+  FaRegBookmark,
+  FaSpinner,
+} from "react-icons/fa6";
+import toast from "react-hot-toast";
+import { Checkbox } from "antd";
+import { Link, useNavigate } from "react-router";
+import { FaSearch } from "react-icons/fa";
+import { getScholarshipImage } from "../components/getScholarshipImages";
+import ScholarshipCardSkeleton from "../components/ScholarshipCardSkeleton";
 
 const ScholarshipPage = () => {
-  const [scholarship, setScholarship] = useState([])
-  const [categorires, setCategories] = useState([])
-  const [locations, setLocations] = useState([])
-  const [universityNames, setUniversityNames] = useState([])
-  const [levels, setLevels] = useState([])
+  const [scholarship, setScholarship] = useState([]);
+  const [categorires, setCategories] = useState([]);
+  const [locations, setLocations] = useState([]);
+  const [universityNames, setUniversityNames] = useState([]);
+  const [levels, setLevels] = useState([]);
   const [checkedCategories, setCheckedCategories] = useState([]);
   const [checkedLocations, setCheckedLocations] = useState([]);
   const [checkedUniversities, setCheckedUniversities] = useState([]);
   const [checkedLevels, setCheckedLevels] = useState([]);
   const [isForDisabled, setIsForDisabled] = useState(false);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const [scholarshipBM, setScholarshipBM] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
-  const navigate = useNavigate();
-  const isBookmarked = scholarshipBM.some(item => item._id === scholarship._id);
+  const [scholarshipBM, setScholarshipBM] = useState(() => {
+  try {
+    const saved = localStorage.getItem("ScholarshipBM");
+    return saved ? JSON.parse(saved) : [];
+  } catch {
+    return [];
+  }
+});
+
+const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
+
+  const [openDropdown, setOpenDropdown] = useState(null);
 
   //Get all scholarships
   const getScholarships = async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
-      if (checkedCategories.length) params.append('categories', checkedCategories.join(','));
-      if (checkedLocations.length) params.append('locations', checkedLocations.join(','));
-      if (checkedUniversities.length) params.append('universities', checkedUniversities.join(','));
-      if (checkedLevels.length) params.append('levels', checkedLevels.join(','));
-      if (isForDisabled) params.append('isForDisabled', 'true');
-      if (search.trim()) params.append('search', search.trim());
-      params.append('page', page);
-      params.append('limit', 9); // Adjust if needed
+      if (checkedCategories.length)
+        params.append("categories", checkedCategories.join(","));
+      if (checkedLocations.length)
+        params.append("locations", checkedLocations.join(","));
+      if (checkedUniversities.length)
+        params.append("universities", checkedUniversities.join(","));
+      if (checkedLevels.length)
+        params.append("levels", checkedLevels.join(","));
+      if (isForDisabled) params.append("isForDisabled", "true");
+      if (search.trim()) params.append("search", search.trim());
+      params.append("page", page);
+      params.append("limit", 9); // Adjust if needed
 
-      const { data } = await axios.get(`${import.meta.env.VITE_KEY_API}/api/v1/scholarship/scholarships?${params.toString()}`);
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_KEY_API
+        }/api/v1/scholarship/scholarships?${params.toString()}`
+      );
       if (data.success) {
         setScholarship(data.scholarships);
         setTotalPages(data.totalPages);
@@ -53,91 +81,111 @@ const ScholarshipPage = () => {
   };
   useEffect(() => {
     getScholarships();
-  }, [checkedCategories, checkedLocations, checkedUniversities, checkedLevels, isForDisabled, search, page]);
-
+  }, [
+    checkedCategories,
+    checkedLocations,
+    checkedUniversities,
+    checkedLevels,
+    isForDisabled,
+    search,
+    page,
+  ]);
 
   //Getting Categories
   const getCategories = async () => {
     try {
-      const { data } = await axios.get(`${import.meta.env.VITE_KEY_API}/api/v1/category/categories`)
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_KEY_API}/api/v1/category/categories`
+      );
       if (data?.success) {
-        setCategories(data.categories)
+        setCategories(data.categories);
       } else {
-        toast.error(data?.message)
+        toast.error(data?.message);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
   useEffect(() => {
-    getCategories()
-  }, [])
+    getCategories();
+  }, []);
 
   //Getting Locations
   const getLocations = async () => {
     try {
-      const { data } = await axios.get(`${import.meta.env.VITE_KEY_API}/api/v1/location/locations`)
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_KEY_API}/api/v1/location/locations`
+      );
       if (data?.success) {
-        setLocations(data.locations)
-      } else { toast.error(data.message) }
+        setLocations(data.locations);
+      } else {
+        toast.error(data.message);
+      }
     } catch (error) {
-      console.log(error)
-      toast.error('Something went wrong!')
+      console.log(error);
+      toast.error("Something went wrong!");
     }
-  }
+  };
   useEffect(() => {
-    getLocations()
-  }, [])
-
+    getLocations();
+  }, []);
 
   // Get All Program Level
   const getLevel = async () => {
     try {
-      const { data } = await axios.get(`${import.meta.env.VITE_KEY_API}/api/v1/programlevel/levels`)
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_KEY_API}/api/v1/programlevel/levels`
+      );
       if (data?.success) {
-        setLevels(data.levels)
-      } else { toast.error(data.message) }
+        setLevels(data.levels);
+      } else {
+        toast.error(data.message);
+      }
     } catch (error) {
-      console.log(error)
-      toast.error("Something Went Wrong.")
+      console.log(error);
+      toast.error("Something Went Wrong.");
     }
-  }
+  };
   useEffect(() => {
-    getLevel()
-  }, [])
-
+    getLevel();
+  }, []);
 
   // Get All University Names
   const getUniversityName = async () => {
     try {
-      const { data } = await axios.get(`${import.meta.env.VITE_KEY_API}/api/v1/universityname/uninames`)
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_KEY_API}/api/v1/universityname/uninames`
+      );
       if (data?.success) {
-        setUniversityNames(data.uniNames)
-      } else { toast.error(data.message) }
+        setUniversityNames(data.uniNames);
+      } else {
+        toast.error(data.message);
+      }
     } catch (error) {
-      console.log(error)
-      toast.error("Something Went Wrong.")
+      console.log(error);
+      toast.error("Something Went Wrong.");
     }
-  }
+  };
   useEffect(() => {
-    getUniversityName()
-  }, [])
+    getUniversityName();
+  }, []);
 
-  // Handle Filter 
+  // Handle Filter
   const handleFilter = (checked, id, type) => {
-    const update = (prev) => checked ? [...prev, id] : prev.filter(i => i !== id);
+    const update = (prev) =>
+      checked ? [...prev, id] : prev.filter((i) => i !== id);
 
     switch (type) {
-      case 'category':
+      case "category":
         setCheckedCategories(update);
         break;
-      case 'location':
+      case "location":
         setCheckedLocations(update);
         break;
-      case 'university':
+      case "university":
         setCheckedUniversities(update);
         break;
-      case 'level':
+      case "level":
         setCheckedLevels(update);
         break;
       default:
@@ -147,180 +195,432 @@ const ScholarshipPage = () => {
     setPage(1); // Reset to first page after filter change
   };
 
+  const allDropdownsRef = useRef([]);
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!allDropdownsRef.current.some((ref) => ref?.contains(e.target))) {
+        setOpenDropdown(null); // close all
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const isLoggedIn = !!localStorage.getItem("auth");  
+  const bookMark = (e, scholarship) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setScholarshipBM((prev) => {
+      const alreadyExists = prev.some(
+        (item) => item._id === scholarship._id
+      );
+      let updated;
+      
+
+      if (!isLoggedIn) {
+      toast.error("Please log in to bookmark scholarships");
+      return prev
+    }
+
+      if (alreadyExists) {
+        updated = prev.filter(
+          (item) => item._id !== scholarship._id
+        );
+        toast.success("Item removed from bookmarks");
+      } else {
+        updated = [...prev, scholarship];
+        toast.success("Item added to bookmarks");
+      }
+console.log("ID:", scholarship._id);
+
+      localStorage.setItem(
+        "ScholarshipBM",
+        JSON.stringify(updated)
+      );
+      return updated;
+    })
+  }
 
   return (
-    <Layout>
-      <div className="bg-[#bdd1ff40] container mx-auto p-6 rounded-xl m-10">
-        <div className="p-4">
+      <Layout title={"Scholarships - LSP"}>
+        <div className="flex flex-col items-center justify-center bg-background w-full min-h-screen">
+          <div className="relative flex flex-col items-center justify-center px-4 w-full max-w-7xl">
+            <h1 className="text-3xl font-bold m-2 mt-40 uppercase text-center animate-fade-in">
+              Scholarships
+            </h1>
 
-          <h1 className="text-3xl md:text-4xl p-4 rounded-2xl font-bold text-center uppercase mb-6 bg-white">Scholarships</h1>
+            {/* Search bar */}
+            <div
+              className="flex gap-3 animate-fade-in-delay-1 bg-white p-4 my-8 rounded-2xl 
+          w-full sm:w-3/4 lg:w-1/2 border-3 border-gray-200 
+          focus-within:shadow-xl focus-within:border-primary !transition-all duration-300"
+            >
+              <input
+                type="text"
+                placeholder="Search by title..."
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setPage(1);
+                }}
+                className="outline-none text-gray-900 text-md rounded-lg block w-full !transition-all duration-300"
+              />
+              <FaSearch size={20} className="text-footerbg hover:text-primary" />
+            </div>
 
-          <div className="flex flex-col md:flex-row gap-4 ">
-            {/* Filter */}
-            <aside className="md:w-1/4 w-full bg-white p-4 rounded-2xl ">
+            {/* Filters */}
+            <div
+              className="flex flex-wrap animate-fade-in-delay-2 justify-center 
+          w-full sm:w-3/4 lg:w-2/3 gap-x-4 gap-y-5 my-10 mb-20"
+            >
+              {/* Filter box reusable class */}
+              {/** Replace all w-65 → responsive width */}
+              {/** Mobile full width, tablet half, desktop fixed */}
+              <style>{`
+          .filter-box {
+            width: 100%;
+          }
+          @media (min-width: 640px) {
+            .filter-box {
+              width: 48%;
+            }
+          }
+          @media (min-width: 1024px) {
+            .filter-box {
+              width: 220px;
+            }
+          }
+        `}</style>
 
-              <div className="bg-[#bdd1ff40] rounded-xl p-4 sticky top-4  ">
-                <h2 className="text-xl font-semibold mb-4 uppercase text-center">Filters</h2>
-                <input
-                  type="text"
-                  placeholder="Search by title..."
-                  value={search}
-                  onChange={(e) => {
-                    setSearch(e.target.value);
-                    setPage(1);
-                  }}
-                  className="bg-white p-3 outline-0 w-full rounded-lg mb-4"
-                />
-                {/* Add filter options here */}
-                <div className="bg-white p-4 rounded-lg max-h-[80vh] overflow-y-auto">
+              {/* 1 - CATEGORY */}
+              <div
+                ref={(el) => (allDropdownsRef.current[0] = el)}
+                className="filter-box h-15 flex items-center bg-white rounded-2xl relative 
+          !transition-all duration-200 hover:bg-background border-3 border-white"
+              >
+                <button
+                  className="flex justify-between items-center w-full h-full px-5"
+                  onClick={() =>
+                    setOpenDropdown(
+                      openDropdown === "category" ? null : "category"
+                    )
+                  }
+                >
+                  <span>Category</span>
+                  {openDropdown === "category" ? <FaAngleUp /> : <FaAngleDown />}
+                </button>
 
-                  <div className="">
-                    <h4 className='font-semibold'>Categories</h4>
-                    <div className="flex flex-col m-2">
+                <div
+                  className={`absolute top-16 bg-white text-gray-700 rounded-2xl shadow-lg 
+            w-full z-50 !transition-all duration-300 transform 
+            ${openDropdown === "category"
+                      ? "opacity-100 translate-y-0 visible"
+                      : "opacity-0 -translate-y-2 invisible"
+                    }`}
+                >
+                  <ul className="py-2 flex flex-col text-center text-sm p-2">
+                    <li className="flex flex-col py-3">
                       {categorires?.map((c) => (
-                        <Checkbox key={c._id} onChange={(e) => handleFilter(e.target.checked, c._id, 'category')} >{c.name}</Checkbox>
+                        <Checkbox
+                          key={c._id}
+                          onChange={(e) =>
+                            handleFilter(e.target.checked, c._id, "category")
+                          }
+                          styles={"padding: 20px"}
+                        >
+                          {c.name}
+                        </Checkbox>
                       ))}
-                    </div>
-                  </div>
-                  <div className="">
-                    <h4 className='font-semibold'>Locations</h4>
-                    <div className="flex flex-col m-2">
-                      {locations?.map((location) => (
-                        <Checkbox key={location._id} onChange={(e) => handleFilter(e.target.checked, location._id, 'location')} >{location.name}</Checkbox>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="">
-                    <h4 className='font-semibold'>Universities</h4>
-                    <div className="flex flex-col m-2">
-                      {universityNames?.map((uniName) => (
-                        <Checkbox key={uniName._id} onChange={(e) => handleFilter(e.target.checked, uniName._id, 'university')} >{uniName.name}</Checkbox>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="">
-                    <h4 className='font-semibold'>Program Levels</h4>
-                    <div className="flex flex-col m-2">
-                      {levels?.map((level) => (
-                        <Checkbox key={level._id} onChange={(e) => handleFilter(e.target.checked, level._id, 'level')} >{level.name}</Checkbox>
-                      ))}
-                    </div>
-                  </div>
-                  <h4 className='font-semibold'>For Disabled</h4>
-                  <div className="m-2">
-                    <Checkbox checked={isForDisabled} onChange={(e) => setIsForDisabled(e.target.checked)}>
-                      For Disabled
-                    </Checkbox>
-                  </div>
-
+                    </li>
+                  </ul>
                 </div>
               </div>
-            </aside>
-            {/* Main content area */}
-            <div className="w-full md:w-3/4  p-4 sm:p-6 rounded-2xl bg-white">
-              {loading ? <div className="flex justify-center m-2"><FaSpinner className="animate-spin" /></div> :
-                scholarship.length > 0 ? (scholarship.map((scholarship) => (
-                  <div key={scholarship._id} className="md:mx-12 bg-[#bdd1ff40] p-2 flex flex-col rounded-lg h-fit mb-6">
-                    <div className="bg-white flex flex-col m-2 p-3 rounded-lg h-full ">
-                      <div className="flex justify-between m-2">
-                        <h1 className='font-bold text-lg'>{scholarship.title}</h1>
 
-                        <div className="bg-white">
+              {/* 2 - LOCATION */}
+              <div
+                ref={(el) => (allDropdownsRef.current[1] = el)}
+                className="filter-box h-15 flex items-center bg-white rounded-2xl relative 
+          !transition-all duration-200 hover:bg-background border-3 border-white"
+              >
+                <button
+                  className="flex justify-between items-center w-full h-full px-5"
+                  onClick={() =>
+                    setOpenDropdown(
+                      openDropdown === "location" ? null : "location"
+                    )
+                  }
+                >
+                  <span>Location</span>
+                  {openDropdown === "location" ? <FaAngleUp /> : <FaAngleDown />}
+                </button>
+
+                <div
+                  className={`absolute top-16 bg-white text-gray-700 rounded-2xl shadow-lg 
+            w-full z-50 !transition-all duration-300 transform
+            ${openDropdown === "location"
+                      ? "opacity-100 translate-y-0 visible"
+                      : "opacity-0 -translate-y-2 invisible"
+                    }`}
+                >
+                  <ul className="py-2 flex flex-col text-center text-sm p-2">
+                    <li className="flex flex-col py-3">
+                      {locations?.map((location) => (
+                        <Checkbox
+                          key={location._id}
+                          onChange={(e) =>
+                            handleFilter(
+                              e.target.checked,
+                              location._id,
+                              "location"
+                            )
+                          }
+                        >
+                          {location.name}
+                        </Checkbox>
+                      ))}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* 3 - UNIVERSITIES */}
+              <div
+                ref={(el) => (allDropdownsRef.current[2] = el)}
+                className="filter-box h-15 flex items-center bg-white rounded-2xl relative 
+          !transition-all duration-200 hover:bg-background border-3 border-white"
+              >
+                <button
+                  className="flex justify-between items-center w-full h-full px-5"
+                  onClick={() =>
+                    setOpenDropdown(
+                      openDropdown === "Universities" ? null : "Universities"
+                    )
+                  }
+                >
+                  <span>Universities</span>
+                  {openDropdown === "Universities" ? (
+                    <FaAngleUp />
+                  ) : (
+                    <FaAngleDown />
+                  )}
+                </button>
+
+                <div
+                  className={`absolute top-16 bg-white text-gray-700 rounded-2xl shadow-lg 
+            w-full z-50 !transition-all duration-300 transform 
+            ${openDropdown === "Universities"
+                      ? "opacity-100 translate-y-0 visible"
+                      : "opacity-0 -translate-y-2 invisible"
+                    }`}
+                >
+                  <ul className="py-2 flex flex-col text-center text-sm p-2">
+                    <li className="flex flex-col py-3">
+                      {universityNames?.map((uniName) => (
+                        <Checkbox
+                          key={uniName._id}
+                          onChange={(e) =>
+                            handleFilter(
+                              e.target.checked,
+                              uniName._id,
+                              "university"
+                            )
+                          }
+                        >
+                          {uniName.name}
+                        </Checkbox>
+                      ))}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* 4 - LEVELS */}
+              <div
+                ref={(el) => (allDropdownsRef.current[3] = el)}
+                className="filter-box h-15 flex items-center bg-white rounded-2xl relative 
+          !transition-all duration-200 hover:bg-background border-3 border-white"
+              >
+                <button
+                  className="flex justify-between items-center w-full h-full px-5"
+                  onClick={() =>
+                    setOpenDropdown(openDropdown === "Levels" ? null : "Levels")
+                  }
+                >
+                  <span>Program Levels</span>
+                  {openDropdown === "Levels" ? <FaAngleUp /> : <FaAngleDown />}
+                </button>
+
+                <div
+                  className={`absolute top-16 bg-white text-gray-700 rounded-2xl shadow-lg 
+            w-full z-50 !transition-all duration-300 transform 
+            ${openDropdown === "Levels"
+                      ? "opacity-100 translate-y-0 visible"
+                      : "opacity-0 -translate-y-2 invisible"
+                    }`}
+                >
+                  <ul className="py-2 flex flex-col text-center text-sm p-2">
+                    <li className="flex flex-col py-3">
+                      {levels?.map((level) => (
+                        <Checkbox
+                          key={level._id}
+                          onChange={(e) =>
+                            handleFilter(e.target.checked, level._id, "level")
+                          }
+                        >
+                          {level.name}
+                        </Checkbox>
+                      ))}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* 5 - For Disabled */}
+              <div
+                className={`filter-box h-15 flex items-center rounded-2xl relative !transition-all duration-200 
+            ${isForDisabled ? "bg-primary text-white" : "bg-white"}`}
+              >
+                <button
+                  className="flex justify-between items-center w-full h-full px-5 rounded-2xl hover:bg-background border-3 border-white"
+                  onClick={() => setIsForDisabled(!isForDisabled)}
+                >
+                  <span>For Disabled</span>
+                  <div
+                    className={`h-6 w-6 rounded-full border-3 border-primary bg-white 
+                ${isForDisabled ? "!border-[#2C15FC40]" : ""}`}
+                  ></div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* MAIN CONTENT */}
+          <section className="w-full bg-white py-20 px-4">
+            {loading ? (
+              <div className="flex flex-col gap-4">
+                {[1, 2, 3, 4].map((n) => (
+                  <ScholarshipCardSkeleton key={n} />
+                ))}
+              </div>
+            ) : scholarship.length > 0 ? (
+              scholarship.map((scholarship) => (
+                <Link
+                  to={`/scholarship/${scholarship.slug}`}
+                  className="no-underline"
+                  key={scholarship._id}
+                >
+                  <div
+                    className="bg-white !transition-all duration-400 group
+                hover:rounded-xl hover:bg-background hover:translate-x-3 shadow-md 
+                hover:shadow-gray-400 hover:shadow-lg 
+                p-4 flex flex-col sm:flex-row gap-4 mb-5 w-full max-w-3xl mx-auto"
+                  >
+                    {/* IMAGE */}
+                    <div className="w-full sm:w-48 rounded-lg overflow-hidden flex-shrink-0">
+                      <img
+                        src={getScholarshipImage(
+                          scholarship?.title,
+                          scholarship?.universityName?.name
+                        )}
+                        alt={scholarship.title}
+                        className="w-full h-48 sm:h-full object-cover group-hover:scale-110 !transition-all duration-300"
+                      />
+                    </div>
+
+                    {/* CONTENT */}
+                    <div className="flex flex-col flex-grow min-w-0">
+                      <div className="flex flex-wrap items-center justify-between text-xs uppercase text-gray-800 font-bold">
+                        <div className="flex gap-2 sm:gap-3 text-xs line-clamp-1">
+                          <span>
+                            {scholarship?.location?.name?.slice(0, 15) || "--"}
+                          </span>
+                          <span>
+                            {scholarship?.universityName?.name?.slice(0, 15) ||
+                              "--"}
+                          </span>
+                          <span>
+                            {scholarship?.programLevel?.name?.slice(0, 15) ||
+                              "--"}
+                          </span>
+                          <span>
+                            {scholarship?.category?.name?.slice(0, 15) || "--"}
+                          </span>
+                        </div>
+                        <span className="text-gray-900 text-xs line-clamp-1">
+                          {scholarship.applicationDeadline || "--"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center m-2">
+                        <h2 className="font-bold text-lg line-clamp-1 my-3">
+                          {scholarship.title}
+                        </h2>
+                        <div className="">
                           <button
-                            onClick={() => {
-                              setScholarshipBM(prev => {
-                                const alreadyExists = prev.some(item => item._id === scholarship._id);
-                                let updated;
+                            onClick={(e) => bookMark(e, scholarship)}
+                        >
+                          {isLoggedIn && scholarshipBM.some(item => item._id === scholarship._id) ? (
+  <FaBookmark fill="#2C15FC" size={24} />
+) : (
+  <FaRegBookmark fill="#2C15FC" size={24} />
+)}
 
-                                if (alreadyExists) {
-                                  updated = prev.filter(item => item._id !== scholarship._id);
-                                  toast.success("Item removed from bookmarks");
-                                } else {
-                                  updated = [...prev, scholarship];
-                                  toast.success("Item added to bookmarks");
-                                }
-
-                                localStorage.setItem("ScholarshipBM", JSON.stringify(updated));
-                                return updated;
-                              });
-                            }}
-                          >
-                            {scholarshipBM.some(item => item._id === scholarship._id) ? (
-                              <FaBookmark fill="#155efc" size={24} />
-                            ) : (
-                              <FaRegBookmark fill="#155efc" size={24} />
-                            )}
-                          </button>
-
-                        </div>
-
+                        </button>
                       </div>
-                      <div className="m-2 font-light text-sm">
-                        {scholarship?.descriptionHTML?.replace(/<[^>]+>/g, '').length > 298
-                          ? scholarship?.descriptionHTML?.replace(/<[^>]+>/g, '').slice(0, 298) + '...'
-                          : scholarship?.descriptionHTML?.replace(/<[^>]+>/g, '')}
-                      </div>
-                      <div className="m-2 flex flex-col">
-                        <div className='flex'>
-                          <p className="text-gray-600 text-sm flex items-center mr-2">Location:</p>
-                          <p className="font-bold text-sm text-[#155efc]">{scholarship?.location?.name}</p>
-                        </div>
-                        <div className="flex">
-                          <p className="text-gray-600 text-sm flex items-center  mr-2">University: </p>
-                          <p className="font-bold text-sm text-[#155efc]">{scholarship?.universityName?.name}</p>
-                        </div>
-                        <div className="flex">
-                          <p className="text-gray-600 text-sm flex items-center  mr-2">Program: </p>
-                          <p className="font-bold text-sm text-[#155efc]">{scholarship?.programLevel?.map((level, index) => (
-                            <span key={level._id}>
-                              {level.name}
-                              {index < scholarship.programLevel.length - 1 && ", "}
-                            </span>
-                          ))}</p>
-                        </div>
-                        <div className="flex">
-                          <p className="text-gray-600 text-sm flex items-center  mr-2">Category: </p>
-                          <p className="font-bold text-sm text-[#155efc]">{scholarship?.category?.name}</p>
-                        </div>
-                        <div className="flex">
-                          <p className="text-gray-600 text-sm flex items-center  mr-2">Deadline: </p>
-                          <p className="font-bold text-sm truncate text-[#B90000]">{scholarship?.applicationDeadline}</p>
-                        </div>
-                        <div className="flex justify-end">
-                          <button onClick={() => navigate(`/scholarship/${scholarship.slug}`)} className='text-white bg-[#155efc] hover:bg-blue-800 focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto py-4 px-6 m-1 h-fit text-center flex items-center justify-center gap-3'>Read More  <FaArrowRightLong size={20} /></button>
-                        </div>
+                    </div>
+
+                    <p className="text-xs text-gray-600 mt-1 line-clamp-2">
+                      {scholarship?.descriptionHTML
+                        ? scholarship.descriptionHTML
+                          .replace(/<[^>]+>/g, "")
+                          .slice(0, 220) + "..."
+                        : "--"}
+                    </p>
+
+                    <div className="flex justify-end mt-auto pt-2">
+                      <div className="p-3 rounded-xl hover:bg-primary hover:text-white group-hover:bg-primary group-hover:text-white !transition-colors duration-200">
+                        <FaArrowRightLong size={18} />
                       </div>
                     </div>
                   </div>
-                ))) : (
-                  <div className="flex items-center justify-center w-full">
-                    <p className="text-gray-500 uppercase">No scholarships found.</p>
-                  </div>
-                )}
-              <div className="flex justify-center items-center gap-4 mt-6">
-                <button
-                  onClick={() => setPage(prev => Math.max(prev - 1, 1))}
-                  disabled={page === 1}
-                  className="bg-[#155efc] hover:bg-blue-800 text-white p-4  rounded-xl disabled:bg-gray-400"
-                >
-                  <FaAngleLeft />
-                </button>
-                <span> <span className='font-medium text-xl'>{page}</span> of {totalPages}</span>
-                <button
-                  onClick={() => setPage(prev => (prev < totalPages ? prev + 1 : prev))}
-                  disabled={page === totalPages}
-                  className="bg-[#155efc] hover:bg-blue-800 text-white p-4 rounded-xl disabled:bg-gray-400"
-                >
-                  <FaAngleRight />
-                </button>
-              </div>
-
-            </div>
+                </div>
+              </Link>
+          ))
+          ) : (
+          <div className="flex items-center justify-center w-full">
+            <p className="text-gray-500 uppercase">No scholarships found.</p>
           </div>
-        </div>
-      </div>
-    </Layout>
-  )
-}
+          )}
 
-export default ScholarshipPage
+          {/* Pagination */}
+          <div className="flex justify-center items-center gap-4 mt-6">
+            <button
+              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+              disabled={page === 1}
+              className="bg-primary hover:bg-hoverbg text-white p-4 rounded-xl disabled:bg-border"
+            >
+              <FaAngleLeft />
+            </button>
+
+            <span>
+              <span className="font-medium text-xl">{page}</span> of{" "}
+              {totalPages}
+            </span>
+
+            <button
+              onClick={() =>
+                setPage((prev) => (prev < totalPages ? prev + 1 : prev))
+              }
+              disabled={page === totalPages}
+              className="bg-primary hover:bg-hoverbg text-white p-4 rounded-xl disabled:bg-border"
+            >
+              <FaAngleRight />
+            </button>
+          </div>
+        </section>
+      </div>
+    </Layout >
+  );
+};
+
+export default ScholarshipPage;

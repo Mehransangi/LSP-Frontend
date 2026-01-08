@@ -1,51 +1,73 @@
-import { FaArrowRightLong, FaSpinner } from 'react-icons/fa6';
-import Layout from '../components/layout/Layout';
-import { useAuth } from '../context/auth';
-import { useNavigate } from 'react-router';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { toast } from 'react-hot-toast';
-
+import {
+  FaArrowRightLong,
+  FaBookmark,
+  FaChevronLeft,
+  FaChevronRight,
+  FaRegBookmark,
+} from "react-icons/fa6";
+import Layout from "../components/layout/Layout";
+import { useAuth } from "../context/auth";
+import { Link, useNavigate } from "react-router";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { toast } from "react-hot-toast";
+import Carousel from "../components/Carousel";
+import { getScholarshipImage } from "../components/getScholarshipImages";
+import ScholarshipCardSkeleton from "../components/ScholarshipCardSkeleton";
 
 const HomePage = () => {
   const [auth, setAuth] = useAuth();
   const navigate = useNavigate();
   const [scholarships, setScholarships] = useState([]);
-  const [universityNameTags, setUniversityNameTags] = useState([])
+  const [universityNameTags, setUniversityNameTags] = useState([]);
   const [loadingUniTags, setLoadingUniTags] = useState(false);
   const [loadingScholarships, setLoadingScholarships] = useState(false);
-
+  const [scholarshipBM, setScholarshipBM] = useState(() => {
+    try {
+      const saved = localStorage.getItem("ScholarshipBM");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
 
   const getUniversityNameTags = async () => {
     try {
       setLoadingUniTags(true);
       const params = new URLSearchParams();
-      params.append('limit', 4);
+      params.append("limit", 6);
 
-      const { data } = await axios.get(`${import.meta.env.VITE_KEY_API}/api/v1/uninametag/uninametags?${params.toString()}`)
+      const { data } = await axios.get(
+        `${
+          import.meta.env.VITE_KEY_API
+        }/api/v1/uninametag/uninametags?${params.toString()}`
+      );
       if (data?.success) {
-        setUniversityNameTags(data?.uniNametag)
+        setUniversityNameTags(data?.uniNametag);
       } else {
-        toast.error(data.message)
+        toast.error(data.message);
       }
     } catch (error) {
-      console.log(error)
-      toast.error("Something went wrong!")
+      console.log(error);
+      toast.error("Something went wrong!");
     } finally {
       setLoadingUniTags(false);
     }
-
-  }
+  };
   useEffect(() => {
-    getUniversityNameTags()
-  }, [])
+    getUniversityNameTags();
+  }, []);
 
   const getScholarships = async () => {
     try {
       setLoadingScholarships(true);
       const params = new URLSearchParams();
-      params.append('limit', 4);
-      const { data } = await axios.get(`${import.meta.env.VITE_KEY_API}/api/v1/scholarship/scholarships?${params.toString()}`);
+      params.append("limit", 4);
+      const { data } = await axios.get(
+        `${
+          import.meta.env.VITE_KEY_API
+        }/api/v1/scholarship/scholarships?${params.toString()}`
+      );
       if (data?.success) {
         setScholarships(data.scholarships);
       }
@@ -60,175 +82,307 @@ const HomePage = () => {
     getScholarships();
   }, []);
 
+  const isLoggedIn = !!localStorage.getItem("auth");
+  const bookMark = (e, scholarship) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setScholarshipBM((prev) => {
+      const alreadyExists = prev.some((item) => item._id === scholarship._id);
+      let updated;
 
+      if (!isLoggedIn) {
+        toast.error("Please log in to bookmark scholarships");
+        return prev;
+      }
 
+      if (alreadyExists) {
+        updated = prev.filter((item) => item._id !== scholarship._id);
+        toast.success("Item removed from bookmarks");
+      } else {
+        updated = [...prev, scholarship];
+        toast.success("Item added to bookmarks");
+      }
+      console.log("ID:", scholarship._id);
+
+      localStorage.setItem("ScholarshipBM", JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const ShimmerCard = () => {
+    return (
+      <div className="animate-pulse bg-card rounded-lg overflow-hidden shadow-md">
+        <div className="h-48 bg-gray-300 w-full"></div>
+
+        <div className="p-6">
+          <div className="h-4 bg-gray-300 rounded w-3/4 mb-3"></div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <Layout title="Home - LSP">
-      <div className="bg-[#bdd1ff80] container md:mx-auto mx-3 flex-grow p-3 md:p-6 rounded-xl my-10">
+      <div className="flex flex-col items-center justify-center bg-background w-full min-h-screen">
+        {/* Hero Section */}
+        <div className="relative flex flex-col items-center justify-center px-4 w-full max-w-7xl mx-auto">
+          {/* Top Section */}
+          <div className="flex flex-col md:flex-row items-start md:items-center w-full my-10 gap-6">
+            {/* Left Text */}
+            <h1 className="text-2xl md:text-5xl font-black uppercase animate-fade-in leading-tight md:w-1/2">
+              Looking for a Scholarship in Pakistan?
+            </h1>
 
-        {/* Banner */}
-        <div className="bg-white p-4 rounded-2xl overflow-hidden mb-6">
-          <div className="relative min-h-[300px] rounded-2xl overflow-hidden">
-            {/* Proper background image with cover and center */}
-            <div
-              className="absolute inset-0 bg-cover bg-right"
-              style={{ backgroundImage: "url('/bg-3.jpg')" }}
-            />
-
-            {/* Skewed overlay */}
-            <div className="absolute -left-1/4 -top-1/4 w-[150%] h-[150%] bg-black opacity-30 -skew-y-3 z-10" />
-
-            {/* Content Layer */}
-            <div className="relative p-6 text-white flex flex-col justify-center h-full w-full md:w-1/2 z-20">
-              <h1 className="text-xl md:text-4xl font-bold uppercase md:mx-20 mt-8 mb-4">
-                Looking for a Scholarship in Pakistan?
-              </h1>
-              <p className="text-sm md:w-1/2 md:mx-20">
-                <strong>LSP is the answer you were looking for</strong>. We’ve gathered scholarships from all across Pakistan into one place for you. Start your journey today and unlock your potential. Bookmark your favorites for easy access later. Let’s get started!
+            {/* Right Description + Button */}
+            <div className="flex flex-col md:items-end w-full md:w-1/2 animate-fade-in-delay-1">
+              <p className="text-sm md:text-base md:w-4/5 text-gray-700">
+                <span className="font-semibold">
+                  LSP is the answer you were looking for
+                </span>
+                , we have found scholarships from all across Pakistan and
+                gathered them in one place for you.
               </p>
+
+              <Link
+                to={"/scholarships"}
+                className="rounded-lg p-2 px-6 my-3 border-2 border-primary hover:bg-primary hover:text-white text-center !transition-all duration-200"
+              >
+                Read Scholarship
+              </Link>
             </div>
+          </div>
+
+          {/* Carousel Section */}
+          <div className="w-full rounded-2xl animate-fade-in-delay-2">
+            <Carousel />
           </div>
         </div>
 
-
-        {/* Header */}
-        <div className="bg-white mb-4 flex justify-between items-center p-4 rounded-2xl">
-          <h3 className="text-xl font-bold uppercase">Scholarships</h3>
-        </div>
-
-        {/* Scholarships */}
-        <div className="bg-white w-full rounded-2xl flex flex-col p-4 overflow-auto">
-          {loadingScholarships ? (
-            <div className="flex justify-center m-2"><FaSpinner className="animate-spin" /></div>
-          ) : scholarships.length > 0 ? (
-            scholarships.map((scholarship) => (
-              <div key={scholarship._id} className="bg-[#bdd1ff40] p-5 flex flex-col rounded-lg mb-6 md:mx-40">
-                <div className="bg-white flex flex-col p-4 rounded-lg h-full">
-
-                  {/* Title */}
-                  <div className="flex justify-between items-start mb-2">
-                    <h2 className="font-bold text-base sm:text-lg truncate">
-                      {scholarship.title}
-                    </h2>
-                  </div>
-
-                  {/* Description */}
-                  <div className="text-sm font-light mb-3">
-                    {scholarship?.descriptionHTML?.replace(/<[^>]+>/g, '').length > 198
-                      ? scholarship?.descriptionHTML?.replace(/<[^>]+>/g, '').slice(0, 398) + '...'
-                      : scholarship?.descriptionHTML?.replace(/<[^>]+>/g, '')}
-                  </div>
-
-                  {/* Info Grid */}
-                  <div className="flex flex-col">
-                    <div className='flex'>
-                      <p className="text-gray-600 text-sm mr-2">Location:</p>
-                      <p className="font-bold text-sm text-[#155efc]">{scholarship?.location?.name}</p>
-                    </div>
-                    <div className="flex">
-                      <p className="text-gray-600 text-sm mr-2">University: </p>
-                      <p className="font-bold text-sm text-[#155efc]">{scholarship?.universityName?.name}</p>
-                    </div>
-                    <div className="flex">
-                      <p className="text-gray-600 text-sm mr-2">Program: </p>
-                      <p className="font-bold text-sm text-[#155efc]">
-                        {scholarship?.programLevel?.map((level, index) => (
-                          <span key={level._id}>
-                            {level.name}
-                            {index < scholarship.programLevel.length - 1 && ", "}
-                          </span>
-                        ))}
-                      </p>
-                    </div>
-                    <div className="flex">
-                      <p className="text-gray-600 text-sm mr-2">Category: </p>
-                      <p className="font-bold text-sm text-[#155efc]">{scholarship?.category?.name}</p>
-                    </div>
-                    <div className="flex">
-                      <p className="text-gray-600 text-sm mr-2">Deadline: </p>
-                      <p className="font-bold text-sm truncate text-[#B90000]">{scholarship?.applicationDeadline}</p>
-                    </div>
-                  </div>
-
-                  {/* Button */}
-                  <div className="flex justify-end">
-                    <button
-                      onClick={() => navigate(`/scholarship/${scholarship.slug}`)}
-                      className="text-white bg-[#155efc] hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-4 flex items-center gap-2"
-                    >
-                      Read More <FaArrowRightLong size={16} />
-                    </button>
-                  </div>
-                </div>
+        {/* Scholarship */}
+        <div className="bg-white w-full flex flex-col items-center p-10 my-20">
+          <h2 className="text-2xl font-bold uppercase">Scholarships</h2>
+          <div className="bg-white w-full rounded-2xl flex flex-col p-4 overflow-auto">
+            {loadingScholarships ? (
+              <div className="flex flex-col gap-4">
+                {[1, 2, 3, 4].map((n) => (
+                  <ScholarshipCardSkeleton key={n} />
+                ))}
               </div>
-            ))
-          ) : (
-            <div className="flex items-center justify-center w-full m-4">
-              <p className="text-gray-500 uppercase">No scholarships found.</p>
-            </div>
-          )}
+            ) : scholarships.length > 0 ? (
+              scholarships.map((scholarship) => (
+                <Link
+                  to={`/scholarship/${scholarship.slug}`}
+                  className="no-underline"
+                  key={scholarship._id}
+                >
+                  <div
+                    className="bg-white !transition-all duration-400 group
+                hover:rounded-xl hover:bg-background hover:translate-x-3 shadow-md 
+                hover:shadow-gray-400 hover:shadow-lg 
+                p-4 flex flex-col sm:flex-row gap-4 mb-5 w-full max-w-3xl mx-auto"
+                  >
+                    {/* IMAGE */}
+                    <div className="w-full sm:w-48 rounded-lg overflow-hidden flex-shrink-0">
+                      <img
+                        src={getScholarshipImage(
+                          scholarship?.title,
+                          scholarship?.universityName?.name
+                        )}
+                        alt={scholarship.title}
+                        className="w-full h-48 sm:h-full object-cover group-hover:scale-110 !transition-all duration-300"
+                      />
+                    </div>
 
-          <div className="flex justify-center">
-            <button
-              onClick={() => navigate(`/universitynametag`)}
-              className="text-white bg-[#155efc] hover:bg-[#114AC8] font-medium rounded-lg text-sm py-3 px-6 flex items-center justify-center gap-2 md:w-fit"
-            >
-              View All <FaArrowRightLong size={20} />
-            </button>
+                    {/* CONTENT */}
+                    <div className="flex flex-col flex-grow min-w-0">
+                      <div className="flex flex-wrap items-center justify-between text-xs uppercase text-gray-800 font-bold">
+                        <div className="flex gap-2 sm:gap-3 text-xs line-clamp-1">
+                          <span>
+                            {scholarship?.location?.name?.slice(0, 15) || "--"}
+                          </span>
+                          <span>
+                            {scholarship?.universityName?.name?.slice(0, 15) ||
+                              "--"}
+                          </span>
+                          <span>
+                            {scholarship?.programLevel?.name?.slice(0, 15) ||
+                              "--"}
+                          </span>
+                          <span>
+                            {scholarship?.category?.name?.slice(0, 15) || "--"}
+                          </span>
+                        </div>
+                        <span className="text-gray-900 text-xs line-clamp-1">
+                          {scholarship.applicationDeadline || "--"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center m-2">
+                        <h2 className="font-bold text-lg line-clamp-1 my-3">
+                          {scholarship.title}
+                        </h2>
+                        <div className="">
+                          <button onClick={(e) => bookMark(e, scholarship)}>
+                            {isLoggedIn &&
+                            scholarshipBM.some(
+                              (item) => item._id === scholarship._id
+                            ) ? (
+                              <FaBookmark fill="#2C15FC" size={24} />
+                            ) : (
+                              <FaRegBookmark fill="#2C15FC" size={24} />
+                            )}
+                          </button>
+                        </div>
+                      </div>
+
+                      <p className="text-xs text-gray-600 mt-1 line-clamp-2">
+                        {scholarship?.descriptionHTML
+                          ? scholarship.descriptionHTML
+                              .replace(/<[^>]+>/g, "")
+                              .slice(0, 220) + "..."
+                          : "--"}
+                      </p>
+
+                      <div className="flex justify-end mt-auto pt-2">
+                        <div className="p-3 rounded-xl hover:bg-primary hover:text-white group-hover:bg-primary group-hover:text-white !transition-colors duration-200">
+                          <FaArrowRightLong size={18} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))
+            ) : (
+              <div className="flex items-center justify-center w-full m-4">
+                <p className="text-gray-500 uppercase">
+                  No scholarships found.
+                </p>
+              </div>
+            )}
+
+            <div className="flex justify-center">
+              <button
+                onClick={() => navigate(`/universitynametag`)}
+                className="btn max-w-3xl mt-6"
+              >
+                View All <FaArrowRightLong size={20} />
+              </button>
+            </div>
           </div>
         </div>
 
         {/* University Name Tags */}
-        <div className="bg-white flex justify-between items-center p-4 my-5 rounded-2xl">
-          <h3 className="text-xl font-bold uppercase">University Tags</h3>
+        <div className="relative flex flex-col items-center justify-center w-full box-border bg-white py-20 mb-20">
+          <h2 className="text-2xl font-bold uppercase mb-6">University Tags</h2>
+
+          <div className="w-full bg-white relative">
+            {/* LEFT BUTTON */}
+            <button
+              onClick={() =>
+                document
+                  .getElementById("uniScroller")
+                  .scrollBy({ left: -300, behavior: "smooth" })
+              }
+              className="group hidden h-full items-center rounded-xl mx-6 sm:flex absolute sm:left-0 xl:left-25 top-1/2 -translate-y-1/2 z-20 border-transparent border-3 hover:border-3 hover:border-primary hover:shadow-xl active:bg-primary p-3 !transition-all bg-background"
+            >
+              <FaChevronLeft className="text-black group-active:text-white" />
+            </button>
+
+            {/* RIGHT BUTTON */}
+            <button
+              onClick={() =>
+                document
+                  .getElementById("uniScroller")
+                  .scrollBy({ left: 300, behavior: "smooth" })
+              }
+              className="group hidden h-full items-center rounded-xl mx-6 sm:flex absolute sm:right-0 xl:right-25 top-1/2 -translate-y-1/2 z-20 border-transparent border-3 hover:border-3 hover:border-primary hover:shadow-xl p-3 active:bg-primary !transition-all bg-background"
+            >
+              <FaChevronRight className="text-black group-active:text-white" />
+            </button>
+
+            <div className="max-w-7xl mx-auto w-full px-4 box-border">
+              {/* SCROLLER */}
+              <div
+                id="uniScroller"
+                className="overflow-x-auto no-scrollbar -mx-4 px-4 scroll-smooth"
+                style={{ overscrollBehaviorX: "contain" }}
+              >
+                <div
+                  className="flex gap-4 py-5 box-border"
+                  style={{
+                    scrollSnapType: "x mandatory",
+                    boxSizing: "border-box",
+                    width: "100%",
+                  }}
+                >
+                  {loadingUniTags ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 w-full gap-10">
+                      <ShimmerCard />
+                      <ShimmerCard />
+                      <ShimmerCard />
+                    </div>
+                  ) : universityNameTags?.length > 0 ? (
+                    universityNameTags.map((tag) => (
+                      <a
+                        href={tag?.link}
+                        key={tag?._id}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block md:max-w-xs md:min-w-xs"
+                      >
+                        <div className="group bg-card rounded-lg overflow-hidden shadow-md !transition-all ease-out duration-300 card-hover">
+                          <div className="h-48 border-b-2 border-gray-700 overflow-hidden">
+                            <img
+                              src={tag?.imgLink}
+                              alt={tag?.name}
+                              className="w-full h-full object-cover !transition-transform !duration-500 group-hover:scale-110"
+                            />
+                          </div>
+
+                          <div className="p-6">
+                            <h3 className="text-xl font-semibold mb-1 truncate">
+                              {tag?.name}
+                            </h3>
+                          </div>
+                        </div>
+                      </a>
+                    ))
+                  ) : (
+                    <div className="text-center text-gray-500 w-full py-8">
+                      No University NameTags found
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Hide scrollbar */}
+            <style>{`
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      .no-scrollbar::-webkit-scrollbar { display: none; height: 0; }
+      .group img { max-width: 100%; height: auto; display: block; }
+    `}</style>
+          </div>
+
           <button
             onClick={() => navigate(`/universitynametag`)}
-            className="text-white bg-[#155efc] hover:bg-[#114AC8] font-medium rounded-lg text-sm py-3 px-6 flex items-center gap-2"
+            className="btn max-w-3xl mt-6"
           >
             View All <FaArrowRightLong size={20} />
           </button>
         </div>
-        <div className='bg-white p-6 rounded-2xl'>
-          {loadingUniTags ? (<div className="flex justify-center m-2"><FaSpinner className="animate-spin" /></div>) :
-            universityNameTags?.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {universityNameTags.map(tag => (
-                  <a
-                    href={tag?.link}
-                    key={tag?._id}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block"
-                  >
-                    <div className="bg-[#3448f9] text-white p-5 rounded-tr-4xl rounded-bl-4xl uppercase font-bold text-lg hover:bg-[#4457fe] hover:scale-105 transition-transform duration-200 shadow-md flex items-center justify-between">
-                      <span className="truncate w-full">{tag?.name}</span>
-                    </div>
-                  </a>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center text-gray-500 ">No University NameTags found</div>
-            )}
-        </div>
+
         {/* Contact Us Section */}
-        <div className=" text-white md:min-h-70 bg-[url('/ContactUS.jpg')] bg-no-repeat bg-cover bg-center rounded-2xl p-6 mt-6">
-          <div className="flex flex-col justify-center my-15 mx-8">
-            <h4 className='font-bold text-2xl gap-2 md:w-1/2'>IF YOU HAVE ANY QUERIES FEEL FREE TO CONTACT US</h4>
-            <button
-              onClick={() => navigate(`/contact`)}
-              className="text-white max-w-fit my-4 bg-[#155efc] hover:bg-[#114AC8] font-medium rounded-lg text-sm py-3 px-6 flex items-center gap-2"
-            >
-              Contact Us
-            </button>
-          </div>
+        <div className=" w-full bg-lineartt text-white py-35 text-center flex flex-col items-center justify-center">
+          <h3 className="font-bold text-7xl mb-3">TALK TO US</h3>
+          <p className="font-medium text-lg mb-10">
+            IF YOU HAVE ANY QUERIES FEEL FREE TO CONTACT US.
+          </p>
+          <button onClick={() => navigate(`/contact`)} className="btn max-w-3xl">
+            Contact Us
+          </button>
         </div>
       </div>
-
-
-
-    </Layout >
-
+    </Layout>
   );
 };
 

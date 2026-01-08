@@ -36,8 +36,8 @@ const AdminDashboard = () => {
 
     return (
         <Layout title={"Admin Dashboard - LSP"}>
-            <div className="container px-4 py-6 mx-auto">
-                <div className="bg-[#bdd1ff40] min-h-[75vh] rounded-2xl p-4 flex flex-col md:flex-row gap-6">
+            <div className="flex items-center justify-center bg-background w-screen h-fit">
+                <div className="container bg-white shadow-lg mx-auto lg:mx-70 lg:my-20 rounded-2xl p-4 flex flex-col md:flex-row gap-6">
                     {/* Sidebar */}
                     <div className="md:w-1/4 w-full">
                         <AdminMenu />
@@ -45,11 +45,11 @@ const AdminDashboard = () => {
 
                     {/* Main Content */}
                     <div className="md:w-3/4 w-full flex flex-col">
-                        <h1 className="text-center font-bold text-2xl mb-4">ADMIN PANEL</h1>
+                        <h1 className="text-center font-bold text-2xl mt-10">ADMIN PANEL</h1>
                         <form onSubmit={handleUpdateProfile} className="bg-white w-full h-full rounded-2xl flex justify-start items-center flex-col gap-2 p-6">
-                            <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="outline-none text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-2.5 border-2 border-gray-300" />
-                            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="outline-none text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-2.5 border-2 border-gray-300" />
-                            <button type="submit" className="text-white bg-[#155efc] hover:bg-blue-800  focus:outline-none  font-medium rounded-lg text-sm w-full sm:w-auto px-10 py-3 text-center">
+                            <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="input-field" />
+                            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="input-field" />
+                            <button type="submit" className="btn">
                                 Update Profile
                             </button>
                         </form>

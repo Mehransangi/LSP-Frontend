@@ -86,9 +86,9 @@ const CreateLocation = () => {
 
     return (
         <Layout title={"Create Location - LSP"}>
-            <div className="container mx-auto p-6">
-                <div className="flex flex-col md:flex-row bg-[#bdd1ff40] rounded-2xl min-h-screen">
-                    <div className="w-full md:w-1/4 p-4">
+            <div className="flex items-center justify-center bg-background w-screen h-fit">
+                <div className="container bg-white shadow-lg mx-auto lg:mx-60 lg:my-20 rounded-2xl p-4 flex flex-col md:flex-row gap-6">
+                    <div className="md:w-2/6 p-4">
                         <AdminMenu />
                     </div>
 
@@ -97,10 +97,10 @@ const CreateLocation = () => {
 
                         <InputForm handleSubmit={handleSubmit} value={name} setValue={setName} field={"Location"} isSubmitting={isSubmitting} />
 
-                        <div className="bg-white min-h-dvh mt-6 rounded-2xl p-4 overflow-auto">
+                        <div className="bg-white mt-6 rounded-2xl p-4 overflow-auto">
                             <table className="w-full text-sm text-center text-gray-500 rounded-2xl overflow-hidden border-separate border-spacing-y-2">
                                 <thead>
-                                    <tr className="bg-[#155efc] text-white">
+                                    <tr className="bg-primary text-white">
                                         <th className="px-6 py-3  first:rounded-tl-2xl last:rounded-tr-2xl uppercase">Location Name</th>
                                         <th className="px-6 py-3  last:rounded-tr-2xl uppercase">Actions</th>
                                     </tr>
@@ -109,7 +109,7 @@ const CreateLocation = () => {
                                     {locations?.map((l) => (
                                         <tr
                                             key={l._id}
-                                            className={`hover:bg-white gap-y-1 bg-[#bdd1ff40] border-b rounded-xl`}
+                                            className={`hover:bg-white gap-y-1 bg-background border-b rounded-xl`}
                                         >
                                             <td className="px-6 py-4 font-medium text-gray-900">{l.name}</td>
                                             <td className="px-6 py-4 flex justify-center gap-2">
@@ -119,13 +119,13 @@ const CreateLocation = () => {
                                                         setUpdatedName(l.name);
                                                         setSelected(l._id);
                                                     }}
-                                                    className="border-2 text-[#155efc] hover:bg-blue-100 px-4 py-2 rounded"
+                                                    className="border-2 text-primary hover:bg-background px-4 py-2 rounded-lg"
                                                 >
                                                     Edit
                                                 </button>
                                                 <button
                                                     onClick={() => handleDelete(l._id)}
-                                                    className="border-2 text-red-700 hover:bg-red-100 px-4 py-2 rounded"
+                                                    className="border-2 text-red-700 hover:bg-red-100 px-4 py-2 rounded-lg"
                                                 >
                                                     Delete
                                                 </button>
@@ -136,7 +136,7 @@ const CreateLocation = () => {
                             </table>
                         </div>
 
-                        <Modal open={isOpen} onCancel={() => setIsOpen(false)} footer={null} title="UPDATE LOCATION">
+                        <Modal open={isOpen} onCancel={() => setIsOpen(false)} footer={null} title="UPDATE LOCATION" width={800} centered>
                             <InputForm handleSubmit={handleUpdate} value={updatedName} setValue={setUpdatedName} field={"Location"} isSubmitting={isSubmitting} />
                         </Modal>
                     </div>

@@ -30,24 +30,61 @@ const Contact = () => {
 
   return (
     <Layout title={"Contact Us - LSP"}>
-      <form onSubmit={handleSubmit} className=" container max-w-[48rem] items-center justify-center text-black bg-[#bdd1ff80] p-3 md:p-12 rounded-2xl">
-        <div className="bg-white p-3 md:p-10 rounded-2xl flex flex-col justify-center">
-          <h1 className="text-3xl font-bold uppercase text-center mb-2">Contact Us</h1>
-          <p className="mb-2 text-center text-gray-500">For any queries or support, please reach out to us at:</p>
-          <input value={name} onChange={(e) => { setName(e.target.value) }} type="text" className="w-full flex p-4 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 my-2 focus:ring-blue-500" placeholder="Name" required />
+      <div className="w-full bg-linearb flex justify-center items-center">
+        <form
+          onSubmit={handleSubmit}
+          className="w-full max-w-lg bg-white text-black rounded-2xl shadow-xl p-8 pb-10 my-20"
+        >
+          <div className="rounded-2xl flex flex-col justify-center">
+            <h1 className="text-3xl font-bold uppercase text-center mb-3">Want To Talk?</h1>
+            <p className="text-center text-gray-500 mb-6">Feel free to write whatever your query is.</p>
+            <label htmlFor="name" className='font-semibold my-3'>Name</label>
+            <input
+              id='name'
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              type="text"
+              className="input-field"
+              placeholder="Enter Your Name"
+              required
+            />
 
-          <input value={email} onChange={(e) => { setEmail(e.target.value) }} type="email" className="w-full p-4 border-2 border-gray-300 my-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Email" required />
+            <label htmlFor="email" className='font-semibold my-3'>Email</label>
+            <input
+              id='email'
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              type="email"
+              className="input-field"
+              placeholder="Enter Your Email"
+              required
+            />
 
-          <textarea value={message} onChange={(e) => { setMessage(e.target.value) }} className="w-full p-2 min-h-40 border-2 border-gray-300 my-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Message" required />
+            <label htmlFor="message" className='font-semibold my-3'>Message</label>
+            <textarea
+              id='message'
+              rows={5}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="input-field"
+              placeholder="Write Your Message"
+              required
+            />
 
-          <div className="flex justify-center">
-            <button className={`text-white max-w-fit my-4 bg-[#155efc] hover:bg-[#114AC8] font-medium rounded-lg text-sm py-3 px-6 m-2 flex items-center gap-2 ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-              }`} disabled={isSubmitting}>
-              {isSubmitting ? <FaSpinner className="animate-spin" /> : "Send"}
-            </button>
+            <div className="flex justify-center">
+              <button
+                type="submit"
+                className={`text-white w-full bg-primary hover:bg-hoverbg font-medium rounded-xl py-3 px-6 flex items-center justify-center gap-2 !transition-all ease-in-out duration-300 ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? <FaSpinner className="animate-spin" /> : "Send"}
+              </button>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
+
     </Layout>
   )
 }

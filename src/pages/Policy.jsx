@@ -4,10 +4,12 @@ import Layout from '../components/layout/Layout'
 const Policy = () => {
   return (
     <Layout title={"Privacy Policy - LSP"}>
-       <div className="bg-[#bdd1ff40] min-h-[75vh] rounded-2xl p-4 flex flex-col m-20 gap-6">
-
-        <h1 className='font-bold text-2xl my-3 block bg-white text-center p-3 rounded-2xl'>Privacy Policy</h1>
-        <div className="bg-white w-full h-full rounded-2xl flex justify-start items-start flex-col gap-2 p-6">
+       <div className='flex w-full'>
+        <div className="w-full absolute bg-linearpp h-200"></div>
+        <div className="z-50 w-full flex flex-col items-center">
+          <h1 className='text-white font-bold text-2xl text-center mt-40 mb-20 uppercase'>Privacy Policy</h1>
+          <img src="./Images/PrivacyPolicy.png" alt="Privacy Policy" className='w-200' />
+          <div className=" flex flex-col gap-2 p-10 mx-100 mb-15 font-light">
         <p>Welcome to LSP. We are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy outlines how we collect, use, disclose, and safeguard your data when you visit our website, make a purchase, or interact with our services.
           By using our website, you agree to the terms of this Privacy Policy. If you do not agree, please do not access or use our services.</p>
         <h3 className='font-bold text-xl my-1'>Information We Collect</h3>
@@ -50,6 +52,7 @@ const Policy = () => {
           <li>Legal authorities if required by law (e.g., fraud prevention, court orders)</li>
           <li>Business partners (only with your consent for promotions)</li>
         </ul>
+        </div>
         </div>
       </div>
     </Layout>

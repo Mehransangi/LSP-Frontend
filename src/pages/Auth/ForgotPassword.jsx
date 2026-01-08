@@ -18,74 +18,76 @@ const ForgotPassword = () => {
       const res = await axios.post(`${import.meta.env.VITE_KEY_API}/api/v1/auth/forgot-password`, { password })
       toast.success("Loged In", { duration: 3000 })
       navigate('/login')
-    }else{
+    } else {
       toast.error('Somthing Went Wrong!!!')
     }
   };
 
   return (
     <Layout>
-
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md border-[#BDD1FF] border-4"
-      >
-        <h2 className="text-2xl font-bold mb-6 text-center">Set Your Password</h2>
-
-        {/* Password Field */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 my-1">Password</label>
-          <div className="relative">
-            <input
-              type={showPassword ? 'text' : 'password'}
-              className="w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-           
-          </div>
-        </div>
-
-        {/* Confirm Password Field */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 my-1">Confirm Password</label>
-          <div className="relative">
-            <input
-              type={showPassword ? 'text' : 'password'}
-              className="w-full px-3 py-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
-            <button
-              type="button"
-              className="absolute inset-y-0 right-2 text-sm text-[#155efc]"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? 'Hide' : 'Show'}
-            </button>
-          </div>
-        </div>
-
-
-        {/* Error Message */}
-        <div className=' h-6 m-1'>
-        {confirmPassword && password !== confirmPassword && (
-          <p className="text-red-500 text-sm ">Passwords do not match</p>
-        )}</div>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={!passwordsMatch}
-          className={`w-full py-2 rounded-md text-white font-medium transition ${passwordsMatch ? 'bg-[#155efc] hover:bg-blue-700' : 'bg-gray-400 cursor-not-allowed'
-            }`}
+      <div className="w-full bg-linearb flex justify-center items-center">
+        <form
+          onSubmit={handleSubmit}
+          className="w-full max-w-lg bg-white text-black rounded-2xl shadow-xl p-8 pb-10 my-20"
         >
-          Set Password
-        </button>
-      </form>
+          <h2 className="text-3xl font-bold uppercase text-center mb-3">Set Your Password</h2>
 
+          {/* Password Field */}
+          <div className="mb-4">
+            <label className="font-semibold">Password</label>
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                className="input-field mt-2"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+
+            </div>
+          </div>
+
+          {/* Confirm Password Field */}
+          <div className="mb-4">
+            <label className="font-semibold">Confirm Password</label>
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                className="input-field mt-2"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+            </div>
+            <div className="text-end">
+              <button
+                type="button"
+                className="hover:underline hover:text-primary !transition-all ease-in-out cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? 'Hide Password' : 'Show Password'}
+              </button>
+            </div>
+          </div>
+
+
+          {/* Error Message */}
+          <div className='h-6 m-1'>
+            {confirmPassword && password !== confirmPassword && (
+              <p className="text-red-500 text-md">Passwords do not match</p>
+            )}</div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={!passwordsMatch}
+            className={`btn ${passwordsMatch ? '' : 'bg-gray-600 cursor-not-allowed'
+              }`}
+          >
+            Set Password
+          </button>
+        </form>
+      </div>
     </Layout>
   );
 };

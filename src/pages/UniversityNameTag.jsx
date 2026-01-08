@@ -31,73 +31,124 @@ const UniversityNameTag = () => {
     getUniversityNameTags()
   }, [])
 
+  const ShimmerCard = () => {
   return (
-    <Layout>
-      <div className='bg-[#bdd1ff40] container mx-auto p-6 rounded-xl m-10'>
-        <div className="bg-white rounded-2xl p-6 mb-6">
-          <h2 className="text-3xl font-bold m-2 uppercase text-center">UniversityTags</h2>
-          <p className="text-gray-600 mx-40 px-4 bg-white">Explore a diverse range of university Tags curated specifically for students. Each Tag serves as a direct link to the official scholarship page of the respective university, providing comprehensive information about the financial aid and scholarship opportunities available. These resources are designed to help students discover and apply for programs that support their academic journey and reduce the financial burden of higher education.</p>
-        </div>
-        <div className="bg-white p-4 rounded-xl">
-          <div className="flex flex-col gap-8">
+    <div className="animate-pulse bg-card rounded-lg overflow-hidden shadow-md">
+      <div className="h-48 bg-gray-300 w-full"></div>
 
-            {/* UniversityTags */}
-            <div>
-              <h3 className="text-xl font-semibold m-4 uppercase">For Normal Students</h3>
-              {loading ? <div className="flex justify-center m-2"><FaSpinner className="animate-spin" /></div> :
-                universityNameTags?.filter(tag => tag.forDisabled === false).length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {universityNameTags
-                      .filter(tag => tag.forDisabled === false)
-                      .map(tag => (
-                        <a
-                          href={tag?.link}
-                          key={tag?._id}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block"
-                        >
-                          <div className="bg-[#3448f9] text-white p-5 rounded-tr-4xl rounded-bl-4xl uppercase font-bold text-lg hover:bg-[#4457fe] hover:scale-105 transition-transform duration-200 shadow-md flex items-center justify-between">
-                            <span className="truncate w-full">{tag?.name}</span>
-                          </div>
-                        </a>
-                      ))}
-                  </div>
-                ) : (
-                  <div className="text-center text-gray-500 ">No University NameTags found</div>
-                )}
-            </div>
-
-            <div>
-              <h3 className="text-xl font-semibold m-4 uppercase">For Disabled Students</h3>
-              {loading ? <div className="flex justify-center m-2"><FaSpinner className="animate-spin" /></div> :
-                universityNameTags?.filter(tag => tag.forDisabled === true).length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {universityNameTags
-                      .filter(tag => tag.forDisabled === true)
-                      .map(tag => (
-                        <a
-                          href={tag?.link}
-                          key={tag?._id}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block"
-                        >
-                          <div className="bg-[#16a8e7] hover:bg-[#4bc5f9] text-white p-5 rounded-tr-4xl rounded-bl-4xl uppercase font-bold text-lg  hover:scale-102 transition-transform duration-200 shadow-md flex items-center justify-between">
-                            <span className="truncate w-full">{tag?.name}</span>
-                          </div>
-                        </a>
-                      ))}
-                  </div>
-                ) : (
-                  <div className="text-center text-gray-500">No University NameTags for Disabled found</div>
-                )}
-            </div>
-
-          </div>
-        </div>
-
+      <div className="p-6">
+        <div className="h-4 bg-gray-300 rounded w-3/4 mb-3"></div>
       </div>
+    </div>
+  );
+};
+
+
+  return (
+    <Layout title={"University Tags - LSP"}>
+<div className="flex flex-col items-center justify-center bg-background w-screen h-fit">
+
+  <h1 className="text-3xl font-bold m-2 mt-40 uppercase text-center opacity-0 animate-fade-in-delay-1">
+    UniversityTags
+  </h1>
+
+  <p className="text-center mb-40 opacity-0 animate-fade-in-delay-2">
+    Each tag will lead you to that specific university’s scholarship page that is being offered to & for their students.
+  </p>
+
+  {/* UniversityTags */}
+  <div className="bg-white px-60 pb-20 opacity-0 animate-fade-in-delay-3">
+    <h2 className="text-2xl text-center font-bold m-15 uppercase">for ordinary students</h2>
+
+    {/* --- SHIMMER FOR LOADING --- */}
+    {loading ? (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+        <ShimmerCard />
+        <ShimmerCard />
+        <ShimmerCard />
+      </div>
+    ) : universityNameTags?.filter(tag => tag.forDisabled === false).length > 0 ? (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+        {universityNameTags
+          .filter(tag => tag.forDisabled === false)
+          .map(tag => (
+            <a
+              href={tag?.link}
+              key={tag?._id}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+            >
+              <div className="group bg-card rounded-lg overflow-hidden shadow-md !transition-all ease-out duration-300 card-hover">
+                <div className="h-48 border-b-2 border-gray-700 overflow-hidden">
+                  <img
+                    src={tag?.imgLink}
+                    alt={tag?.name}
+                    className="w-full h-full object-cover !transition-transform !duration-500 group-hover:scale-110"
+                  />
+                </div>
+
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold mb-1 truncate">
+                    {tag?.name}
+                  </h3>
+                </div>
+              </div>
+            </a>
+          ))}
+      </div>
+    ) : (
+      <div className="text-center text-gray-500">No University NameTags found</div>
+    )}
+  </div>
+
+  {/* SPECIAL STUDENTS */}
+  <div className="px-60 pb-20 mb-20 opacity-0 animate-fade-in-delay-4">
+    <h2 className="text-2xl text-center font-bold mb-30 mt-20 uppercase">for SPECIAL students</h2>
+
+    {/* --- SHIMMER FOR LOADING --- */}
+    {loading ? (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+        <ShimmerCard />
+        <ShimmerCard />
+        <ShimmerCard />
+      </div>
+    ) : universityNameTags?.filter(tag => tag.forDisabled === true).length > 0 ? (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+        {universityNameTags
+          .filter(tag => tag.forDisabled === true)
+          .map(tag => (
+            <a
+              href={tag?.link}
+              key={tag?._id}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+            >
+              <div className="group bg-card rounded-lg overflow-hidden shadow-md !transition-all ease-out duration-300 card-hover">
+                <div className="h-48 border-b-2 border-gray-700 overflow-hidden">
+                  <img
+                    src={tag?.imgLink}
+                    alt={tag?.name}
+                    className="w-full h-full object-cover !transition-transform !duration-500 group-hover:scale-110"
+                  />
+                </div>
+
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold mb-1 truncate">
+                    {tag?.name}
+                  </h3>
+                </div>
+              </div>
+            </a>
+          ))}
+      </div>
+    ) : (
+      <div className="text-center text-gray-500">No University NameTags for Disabled found</div>
+    )}
+  </div>
+</div>
+
     </Layout>
   )
 }

@@ -16,7 +16,7 @@ const Layout = ({ children, title, description, keywords, author }) => {
                     <title>{title}</title>
                 </Helmet>
                 <Header />
-                <main className='flex-grow flex items-center justify-center'>
+                <main className='flex-grow flex w-full h-full'>
                     <Toaster />
                     {children}
                 </main>

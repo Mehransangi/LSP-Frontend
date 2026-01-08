@@ -134,8 +134,8 @@ const CreateScholarship = () => {
 
   return (
     <Layout title={"Create Scholarship - LSP"}>
-      <div className="container mx-auto p-6">
-        <div className="flex flex-col md:flex-row bg-[#bdd1ff40] rounded-2xl min-h-screen">
+      <div className="flex items-center justify-center bg-background w-screen h-fit">
+        <div className="container bg-white shadow-lg mx-auto lg:mx-60 lg:my-20 rounded-2xl p-4 flex flex-col md:flex-row gap-6">
           <div className="w-full md:w-1/4 p-4">
             <AdminMenu />
           </div>
@@ -144,21 +144,19 @@ const CreateScholarship = () => {
             <div className=" min-h-dvh mt-6 rounded-2xl p-4 overflow-auto">
               <form onSubmit={handleSubmit}>
                 <div className='my-3'>
-                  <input onChange={(e) => { setTitle(e.target.value) }} value={title} type="text" className="w-full p-3 rounded-lg outline-0 bg-white text-sm" placeholder=" Title " required />
+                  <input onChange={(e) => { setTitle(e.target.value) }} value={title} type="text" className="input-field" placeholder=" Title " required />
+               
+                  <input onChange={(e) => { setApplicationURL(e.target.value) }} value={applicationURL} type="text" className="input-field" placeholder=" URL - Write the original URL Or The Application Form URL  " />
+                
+                  <input onChange={(e) => { setApplicationDeadline(e.target.value) }} value={applicationDeadline} type="text" className="input-field" placeholder=" Day/Month/Year - Application Deadline" required />
                 </div>
-                <div className='my-3'>
-                  <input onChange={(e) => { setApplicationURL(e.target.value) }} value={applicationURL} type="text" className="w-full p-3 rounded-lg outline-0 bg-white text-sm" placeholder=" URL - Write the original URL Or The Application Form URL  " />
-                </div>
-                <div className='my-3'>
-                  <input onChange={(e) => { setApplicationDeadline(e.target.value) }} value={applicationDeadline} type="text" className="w-full p-3 rounded-lg outline-0 bg-white text-sm" placeholder=" Day/Month/Year - Application Deadline" required />
-                </div>
-                <div className="my-3 overflow-x-auto">
+                <div className="">
                   <SimpleEditor
                     key={editorKey}
                     content={descriptionHTML}
                     onUpdate={({ editor }) => setDescriptionHTML(editor.getHTML())}
                     editable={true}
-                    className="bg-white w-full rounded-lg min-w-full"
+                    className="input-field"
                   />
                 </div>
 
@@ -171,8 +169,7 @@ const CreateScholarship = () => {
                     value={category}
                     onChange={(value) => setCategory(value)}
                     style={{ height: '50px' }}
-                    styles={{ popup: { fontSize: '14px', padding: '8px 12px', borderRadius: '8px' } }}
-                    className='w-full bg-white rounded-lg'
+                    className='input-field'
                     options={categories.map(cat => ({ value: cat._id, label: cat.name }))}
                   />
                 </div>
@@ -184,8 +181,7 @@ const CreateScholarship = () => {
                     value={location}
                     onChange={(value) => setLocation(value)}
                     style={{ height: '50px' }}
-                    styles={{ popup: { fontSize: '14px', padding: '8px 12px', borderRadius: '8px' } }}
-                    className='w-full bg-white text-gray-600 rounded-lg'
+                    className='input-field'
                     options={locations.map(loc => ({ value: loc._id, label: loc.name }))}
                   />
                 </div>
@@ -198,8 +194,7 @@ const CreateScholarship = () => {
                     value={programLevel}
                     onChange={(value) => setProgramLevel(value)}
                     style={{ height: '50px' }}
-                    styles={{ popup: { fontSize: '14px', padding: '8px 12px', borderRadius: '8px' } }}
-                    className='w-full bg-white rounded-lg'
+                    className='input-field'
                     options={levels.map(lvl => ({ value: lvl._id, label: lvl.name }))}
                   />
                 </div>
@@ -212,7 +207,7 @@ const CreateScholarship = () => {
                     onChange={(value) => setUniversityName(value)}
                     style={{ height: '50px' }}
                     styles={{ popup: { fontSize: '14px', padding: '8px 12px', borderRadius: '8px' } }}
-                    className='w-full bg-white rounded-xl'
+                    className='input-field'
                     options={uniNames.map(uni => ({ value: uni._id, label: uni.name }))}
                   />
                 </div>
@@ -229,7 +224,7 @@ const CreateScholarship = () => {
                   </label>
                 </div>
                 <div className="flex justify-center items-center">
-                  <button type="submit" disabled={isSubmitting} className={`text-white bg-[#155efc] hover:bg-blue-800 focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto py-4 px-8 text-center ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+                  <button type="submit" disabled={isSubmitting} className={`btn ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
                     }`}
                   >
                     {isSubmitting ? <FaSpinner className="animate-spin" /> : "Create"}</button>

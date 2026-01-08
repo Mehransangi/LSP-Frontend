@@ -9,7 +9,7 @@ const Register = () => {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate()
 
     const handleSubmit = async (e) => {
@@ -32,79 +32,79 @@ const Register = () => {
 
     return (
         <Layout title={"Sign Up - LSP"}>
-            <div className="flex flex-col justify-center items-center min-h-[80vh] md:container px-4 sm:px-6 text-black">
+            <div className="w-full bg-linearb flex justify-center items-center">
                 <form
                     onSubmit={handleSubmit}
-                    className="w-full max-w-md bg-[rgba(189,209,255,0.5)] flex flex-col rounded-xl items-center shadow-md"
+                    className="w-full max-w-lg bg-white text-black rounded-2xl shadow-xl p-8 pb-10 my-20"
                 >
-                    <h1 className="font-bold mt-4 mb-2 text-2xl sm:text-3xl">SIGN UP</h1>
-                    <div className="bg-white w-[90%] flex flex-col items-center rounded-lg my-4 p-4 sm:p-6">
-
+                    <div className="rounded-2xl flex flex-col justify-center">
+                    <h1 className="text-3xl font-bold uppercase text-center mb-3">SIGN UP</h1>
+                    <p className="text-center text-gray-500 mb-6">Enter your details for an account</p>
                         {/* Name Input */}
-                        <div className="relative z-0 w-full mb-5 group">
+                        <div className="relative w-full group">
+                            <label
+                                htmlFor="floating_first_name"
+                                className="font-semibold"
+                            >
+                                First name
+                            </label>
                             <input
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 type="text"
                                 name="floating_first_name"
                                 id="floating_first_name"
-                                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                placeholder=" "
+                                className="input-field mt-3"
+                                placeholder="Enter Your Full Name"
                                 required
                             />
-                            <label
-                                htmlFor="floating_first_name"
-                                className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-blue-600"
-                            >
-                                First name
-                            </label>
-                        </div>
+                        
 
                         {/* Email Input */}
-                        <div className="relative z-0 w-full mb-5 group">
+                        
+                            <label
+                                htmlFor="floating_email"
+                                className="font-semibold"
+                            >
+                                Email address
+                            </label>
                             <input
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 type="email"
                                 name="floating_email"
                                 id="floating_email"
-                                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                placeholder=" "
+                                className="input-field mt-3"
+                                placeholder="Enter Your Email"
                                 required
                             />
-                            <label
-                                htmlFor="floating_email"
-                                className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-blue-600"
-                            >
-                                Email address
-                            </label>
-                        </div>
+                        
 
                         {/* Password Input */}
-                        <div className="relative z-0 w-full mb-5 group">
+                        
+                            <label
+                                htmlFor="floating_password"
+                                className="font-semibold"
+                            >
+                                Password
+                            </label>
                             <input
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 type="password"
                                 name="floating_password"
                                 id="floating_password"
-                                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                placeholder=" "
+                                className="input-field mt-3"
+                                placeholder="Enter Your Password"
                                 required
                             />
-                            <label
-                                htmlFor="floating_password"
-                                className="peer-focus:font-medium absolute text-sm text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-blue-600"
-                            >
-                                Password
-                            </label>
                         </div>
 
                         {/* Submit Button */}
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className={`text-white bg-[#155efc] hover:bg-blue-800 focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto py-4 px-8 text-center ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+                            className={`btn my-2 ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
                                 }`}
                         >
                             {isSubmitting ? <FaSpinner className="animate-spin" /> : "Sign Up"}
@@ -113,7 +113,7 @@ const Register = () => {
                         {/* Login Redirect */}
                         <p className="font-light my-2 text-sm text-center">
                             Already have an account?{" "}
-                            <Link to="/login" className="font-bold underline opacity-80">
+                            <Link to="/login" className="font-bold hover:underline hover:text-primary !transition-all">
                                 Login
                             </Link>
                         </p>

@@ -32,13 +32,14 @@ const Dashboard = () => {
  
   return (
     <Layout title={"Dashboard - LSP"}>
-      <div className="container w-screen bg-[#bdd1ff40] min-h-[77vh] py-1 m-4 flex flex-col rounded-3xl">
-        <h1 className='text-center font-bold text-2xl m-2'>PROFILE</h1>
-        <div className="bg-white w-fill flex-grow rounded-2xl flex justify-start items-center flex-col mx-4">
-          <form onSubmit={handleUpdateProfile} className="bg-white w-full h-full rounded-2xl flex justify-start items-center flex-col gap-2 p-6">
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="outline-none text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-2.5 border-2 border-gray-300" />
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="outline-none text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-2.5 border-2 border-gray-300" />
-            <button type="submit" className="text-white bg-[#155efc] hover:bg-blue-800  focus:outline-none  font-medium rounded-lg text-sm w-full sm:w-auto px-10 py-3 text-center">
+      <div className="flex items-center justify-center bg-background w-screen h-fit">
+       
+        <div className="container bg-white shadow-lg mx-auto lg:mx-70 lg:my-20 rounded-2xl p-4 flex flex-col items-center gap-6">
+          <h1 className='text-center font-bold text-2xl mt-10'>PROFILE</h1>
+          <form onSubmit={handleUpdateProfile} className="bg-white w-full max-w-3xl h-full rounded-2xl flex justify-start items-center flex-col gap-2 p-6">
+            <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="input-field" />
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="input-field" />
+            <button type="submit" className="btn">
               Update Profile
             </button>
           </form>

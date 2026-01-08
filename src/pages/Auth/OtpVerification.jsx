@@ -69,10 +69,10 @@ const OtpVerification = () => {
 
     return (
         <Layout>
-            <div className="flex flex-col items-center justify-center min-h-screen min-w-screen px-4 sm:px-6 ">
-                <div className="bg-white p-2 sm:p-8 rounded-xl shadow-lg w-full max-w-sm text-center border-6 border-[#BDD1FF]">
-                    <h2 className="text-2xl font-bold mb-4 text-gray-800">Enter OTP</h2>
+            <div className="w-full bg-linearb flex justify-center items-center">
+                <div className="w-full max-w-lg bg-white text-black rounded-2xl shadow-xl p-8 pb-10 my-20">
 
+                    <h2 className="text-3xl font-bold uppercase text-center mb-3">Enter OTP</h2>
                     <div className="flex justify-center gap-2 mb-6" onPaste={handlePaste}>
                         {otp.map((digit, i) => (
                             <input
@@ -83,7 +83,7 @@ const OtpVerification = () => {
                                 value={digit}
                                 onChange={(e) => handleChange(e.target, i)}
                                 onKeyDown={(e) => handleKeyDown(e, i)}
-                                className="w-10 sm:w-12 h-12 sm:h-14 text-center text-xl border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="input-field text-center"
                             />
                         ))}
                     </div>
@@ -91,9 +91,9 @@ const OtpVerification = () => {
                     <button
                         onClick={handleSubmit}
                         disabled={otp.includes('')}
-                        className={`w-full py-2.5 rounded-md text-white font-medium transition duration-200 ${otp.includes('')
-                            ? 'bg-gray-400 cursor-not-allowed'
-                            : 'bg-[#155efc] hover:bg-blue-700'
+                        className={`btn ${otp.includes('')
+                            ? 'bg-gray-600 cursor-not-allowed'
+                            : ''
                             }`}
                     >
                         Verify OTP
